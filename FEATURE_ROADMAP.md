@@ -36,6 +36,8 @@ This file records the state of the checked-in implementation. A checkbox means c
 
 ## Verification record
 
-The original failed workflow stopped because `android-actions/setup-android@v3` requested the removed SDK `tools` package. The workflow now resolves the installed command-line tools directly and installs only named valid SDK packages.
+The original failed workflow stopped because `android-actions/setup-android@v3` requested the removed SDK `tools` package. The workflow now resolves the runner's installed command-line tools directly and installs only named SDK packages.
 
-The next observed build failure showed Filament 1.77.2 requires `compileSdk >= 37`; the project was upgraded to Android Gradle Plugin 9.1.1, Gradle 9.3.1, and API 37 using the official Android compatibility guidance. The latest run must be checked before recording a passing build or linking an APK artifact.
+The verified toolchain is JDK 17, Android SDK Platform 37.0 (SDK canary channel), Build Tools 37.0.0, AGP 9.4.0, Kotlin Gradle Plugin 2.4.20, and Gradle 9.6.0. Kotlin uses the legacy Android DSL compatibility setting because the Kotlin Android plugin is not compatible with AGP's new DSL; the app's Android configuration is therefore in `app/build.gradle` (Groovy), not `app/build.gradle.kts`.
+
+Workflow run [#37897881298](https://github.com/OdetteGD/Nexus-3D/actions/runs/37897881298), on commit `dff713393023b2511784c793e609181c438ff61b`, passed `clean testDebugUnitTest assembleDebug assembleRelease`, verified both APK files, and uploaded artifact `nexus-3d-apks`. This entry records that specific run; check the latest Actions run for validation of subsequent commits and lifecycle changes.
