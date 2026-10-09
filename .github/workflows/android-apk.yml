@@ -1,0 +1,95 @@
+name: Android APK
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-apk-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-debug-apk:
+    name: Build and validate Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      # Avoid android-actions/setup-android@v3: it requests the removed "tools"
+      # package. Resolve the runner's installed command-line tools explicitly.
+      - name: Locate Android SDK manager
+        shell: bash
+        run: |
+          test -d "$ANDROID_HOME/cmdline-tools"
+          SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
+          test -n "$SDKMANAGER"
+          echo "SDKMANAGER=$SDKMANAGER" >> "$GITHUB_ENV"
+          echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
+          "$SDKMANAGER" --version
+
+      - name: Accept Android SDK licenses
+        shell: bash
+        run: "${SDKMANAGER} --licenses < <(yes)"
+
+      - name: Install Android 37 preview platform and build tools
+        run: |
+          "$SDKMANAGER" --install "platform-tools"
+          "$SDKMANAGER" --channel=3 --install \
+            "platforms;android-37.0" \
+            "build-tools;37.0.0"
+          "$SDKMANAGER" --list_installed
+          java -version
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "9.6.0"
+
+      - name: Verify toolchain and required project files
+        run: |
+          gradle --version
+          test -f settings.gradle.kts
+          test -f build.gradle.kts
+          test -f app/build.gradle
+          test -f app/src/main/AndroidManifest.xml
+          test -s app/src/main/assets/demo-cube.glb
+
+      - name: Compile, run unit tests, and assemble debug APK
+        run: gradle --no-daemon clean testDebugUnitTest assembleDebug assembleRelease
+
+      - name: Verify APK was produced
+        run: |
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          file app/build/outputs/apk/debug/app-debug.apk
+          test -s app/build/outputs/apk/release/app-release-unsigned.apk
+          file app/build/outputs/apk/release/app-release-unsigned.apk
+
+      - name: Upload installable debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-3d-apks
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
+            app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error
+          retention-days: 14
