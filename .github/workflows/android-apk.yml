@@ -53,19 +53,19 @@ jobs:
         shell: bash
         run: "${SDKMANAGER} --licenses < <(yes)"
 
-      - name: Install Android API 37 and build tools
+      - name: Install Android 37 preview platform and build tools
         run: |
-          "$SDKMANAGER" --install \
-            "platform-tools" \
-            "platforms;android-37" \
-            "build-tools;36.0.0"
+          "$SDKMANAGER" --install "platform-tools"
+          "$SDKMANAGER" --channel=3 --install \
+            "platforms;android-37.0" \
+            "build-tools;37.0.0"
           "$SDKMANAGER" --list_installed
           java -version
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "9.3.1"
+          gradle-version: "9.6.0"
 
       - name: Verify toolchain and required project files
         run: |
