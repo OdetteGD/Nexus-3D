@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - "feat/**"
+      - "fix/**"
   pull_request:
     branches:
       - main
@@ -33,11 +34,15 @@ jobs:
           java-version: "17"
           cache: gradle
 
+      # The legacy "tools" SDK package was removed from Google's repository.
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: "platform-tools"
+          accept-android-sdk-licenses: true
 
       - name: Install Android API 36
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+        run: sdkmanager --install "platforms;android-36" "build-tools;36.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -49,7 +54,7 @@ jobs:
           test -f settings.gradle.kts
           test -f app/build.gradle.kts
           test -f app/src/main/AndroidManifest.xml
-          test -f app/src/main/assets/demo-cube.glb
+          test -s app/src/main/assets/demo-cube.glb
 
       - name: Compile, run unit-test task, and assemble debug APK
         run: gradle --no-daemon clean testDebugUnitTest assembleDebug
