@@ -70,7 +70,7 @@ jobs:
           gradle --version
           test -f settings.gradle.kts
           test -f build.gradle.kts
-          test -f app/build.gradle.kts
+          test -f app/build.gradle
           test -f app/src/main/AndroidManifest.xml
           test -s app/src/main/assets/demo-cube.glb
 
