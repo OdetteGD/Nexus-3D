@@ -40,7 +40,8 @@ class SceneDocumentTest {
         assertEquals(1, scene.selectedIndex)
         assertTrue(scene.deleteSelected())
         assertEquals(1, scene.objects.size)
-        assertFalse(scene.deleteSelected().not())
+        assertTrue(scene.deleteSelected())
+        assertEquals(0, scene.objects.size)
     }
 
     @Test
