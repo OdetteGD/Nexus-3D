@@ -35,4 +35,7 @@ dependencies {
     implementation("com.google.android.filament:filament-android:1.77.2")
     implementation("com.google.android.filament:gltfio-android:1.77.2")
     implementation("com.google.android.filament:filament-utils-android:1.77.2")
+
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303")
 }
