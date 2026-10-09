@@ -137,7 +137,7 @@ class SceneDocument {
             )
         }
         require(restored.size <= 500) { "Scene exceeds the 500-object safety limit." }
-        require(restored.all { it.name.isNotBlank() && listOf(it.x,it.y,it.z,it.rx,it.ry,it.rz,it.sx,it.sy,it.sz).all(Float::isFinite) }) {
+        require(restored.all { it.name.isNotBlank() && listOf(it.x,it.y,it.z,it.rx,it.ry,it.rz,it.sx,it.sy,it.sz).all { it.isFinite() } }) {
             "Scene contains invalid object properties."
         }
         objects.clear()
