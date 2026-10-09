@@ -411,6 +411,9 @@ class MainActivity : Activity() {
         activityResumed = false
         Choreographer.getInstance().removeFrameCallback(frameCallback)
         ioExecutor.shutdownNow()
+        mainHandler.removeCallbacksAndMessages(null)
+        modelViewer?.destroy()
+        modelViewer = null
         super.onDestroy()
     }
 }
