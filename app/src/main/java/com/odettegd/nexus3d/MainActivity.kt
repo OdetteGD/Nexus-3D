@@ -116,7 +116,7 @@ class MainActivity : Activity() {
             button("Add Cube") { mutateScene { add(PrimitiveKind.CUBE) } },
             button("Sphere") { mutateScene { add(PrimitiveKind.SPHERE) } },
             button("Plane") { mutateScene { add(PrimitiveKind.PLANE) } },
-            button("Cylinder") { mutateScene { add(PrimitiveKind.CYLINDER) }
+            button("Cylinder") { mutateScene { add(PrimitiveKind.CYLINDER) } }
         ))
         controls.addView(buttonRow(
             button("Next Object") { if (sceneDocument.objects.isNotEmpty()) {
