@@ -39,3 +39,20 @@ Extend https://github.com/OdetteGD/Nexus-3D with a versioned project format to s
 ```text
 Investigate the latest failed Android APK workflow for https://github.com/OdetteGD/Nexus-3D. Read failed steps and full logs, find the first meaningful error instead of a downstream symptom, inspect the relevant Gradle files and dependency coordinates, and compare versions with official Android/Filament documentation. Make the smallest correct fix. Do not blindly change many versions, remove tests just to get green, or report success before a new run passes. Commit and push to a feature branch and provide the commit SHA and exact workflow URL.
 ```
+
+
+## 6. Improve rendering performance on mobile devices
+
+```text
+Profile and improve real Google Filament rendering performance in https://github.com/OdetteGD/Nexus-3D for Android phones. Inspect the actual renderer, frame callback, GLB loading, memory lifetime, and current Filament 1.77.2 APIs and official samples before changing code.
+
+Measure or log frame time/FPS and model load duration without adding expensive work to every frame. Add device-friendly quality controls only where supported (resolution scale, MSAA, shadows, post-processing), avoid unnecessary allocations in the render loop, and handle Activity pause/resume and Surface recreation safely. Keep the real 3D viewport and bundled demo visible. Add tests for pure logic, build and run CI, inspect failures, fix them, then commit and open a PR. Do not claim a performance improvement without evidence, and report unsupported/device-dependent items clearly.
+```
+
+## 7. Implement future engine systems safely
+
+```text
+Plan and implement the next engine subsystem in https://github.com/OdetteGD/Nexus-3D based on FEATURE_ROADMAP.md and the current code—not imagined files. Choose one coherent subsystem per PR: versioned scene serialization, undo/redo command history, GLTF animation playback, entity hierarchy and transforms, lights, PBR material editing, environment lighting, or project asset management.
+
+Verify all Filament 1.77.2 APIs against official source/docs and sample code. Define ownership/lifetime for every Filament resource, add validation and error recovery, and add tests for deterministic non-rendering logic. Preserve the startup demo GLB, import flow, touch camera controls, and CI. Run tests and the actual Android APK workflow; fix the root cause of failures and report exact files, limitations, commit, PR, and workflow status. Never mark a subsystem complete when only its UI or roadmap entry exists.
+```
