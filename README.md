@@ -16,10 +16,10 @@ The editor is functional but **not yet a full Unity-style engine**. The exact li
 
 ## Build locally
 
-Use JDK 17, Android SDK Platform 37, Android Build Tools 36.0.0, Android Gradle Plugin 9.1.1, and Gradle 9.3.1.
+Use JDK 17, Android SDK Platform 37.0 (installed from the SDK canary channel), Android Build Tools 37.0.0, Android Gradle Plugin 9.4.0, Kotlin Gradle Plugin 2.4.20, and Gradle 9.6.0.
 
 ```bash
-gradle --no-daemon clean testDebugUnitTest assembleDebug
+gradle --no-daemon clean testDebugUnitTest assembleDebug assembleRelease
 ```
 
 Debug APK output: `app/build/outputs/apk/debug/app-debug.apk`
