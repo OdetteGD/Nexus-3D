@@ -198,7 +198,7 @@ class SceneDocument {
         val root = JSONObject()
             .put("asset", JSONObject().put("version", "2.0").put("generator", "Nexus-3D SceneDocument"))
             .put("scene", 0)
-            .put("scenes", JSONArray().put(JSONObject().put("nodes", JSONArray().also { a -> objects.indices.forEach(a::put) })))
+            .put("scenes", JSONArray().put(JSONObject().put("nodes", JSONArray().also { a -> objects.indices.forEach { a.put(it) } })))
             .put("nodes", nodes)
             .put("meshes", meshes)
             .put("materials", JSONArray().put(JSONObject().put("name", "Nexus Default PBR")
@@ -232,7 +232,7 @@ class SceneDocument {
 
     private fun align4(out: ByteArrayOutputStream) { while (out.size() % 4 != 0) out.write(0) }
     private fun floatBytes(values: FloatArray): ByteArray =
-        ByteBuffer.allocate(values.size * 4).order(ByteOrder.LITTLE_ENDIAN).apply { values.forEach(::putFloat) }.array()
+        ByteBuffer.allocate(values.size * 4).order(ByteOrder.LITTLE_ENDIAN).apply { values.forEach { putFloat(it) } }.array()
     private fun shortBytes(values: IntArray): ByteArray =
         ByteBuffer.allocate(values.size * 2).order(ByteOrder.LITTLE_ENDIAN).apply { values.forEach { putShort(it.toShort()) } }.array()
 
